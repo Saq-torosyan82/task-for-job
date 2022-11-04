@@ -1,15 +1,17 @@
 <template>
-    <div>
-        Hello
-    </div>
+    <Navigation />
+    <router-view />
 </template>
 
 <script>
+import Navigation from "./components/Navigation";
 export default {
-    name: "App"
+    name: "App",
+    components: {
+        Navigation
+    }
 }
 </script>
 
 <style scoped>
-
 </style>
