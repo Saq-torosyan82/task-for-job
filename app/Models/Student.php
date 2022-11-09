@@ -26,7 +26,7 @@ class Student extends Model
     }
 
     /**
-     * Get the user's full name.
+     * Get the student dob.
      *
      * @return string
      */

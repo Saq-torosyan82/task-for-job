@@ -15,6 +15,16 @@ class Sport extends Model
     }
 
     /**
+     * Get the sport name.
+     *
+     * @return string
+     */
+    public function getNameAttribute()
+    {
+        return htmlspecialchars_decode($this->attributes['name']);
+    }
+
+    /**
      * Get the sports for the student.
      */
     public function student_sports()
