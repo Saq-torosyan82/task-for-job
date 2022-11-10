@@ -15,29 +15,65 @@
                     <form id="studentForm">
                         <div class="mb-3 mt-3">
                             <label for="first_name" class="form-label">First Name *:</label>
-                            <input id="first_name" type="text" class="form-control" placeholder="Enter first name" required>
+                            <input
+                                id="first_name"
+                                type="text"
+                                class="form-control"
+                                placeholder="Enter first name"
+                                :value="selectedStudent.first_name || ''"
+                            >
                         </div>
                         <div class="mb-3 mt-3">
                             <label for="last_name" class="form-label">Last Name *:</label>
-                            <input id="last_name" type="text" class="form-control" placeholder="Enter last name" required>
+                            <input
+                                id="last_name"
+                                type="text"
+                                class="form-control"
+                                placeholder="Enter last name"
+                                :value="selectedStudent.last_name || ''"
+                            >
                         </div>
                         <div class="mb-3 mt-3">
                             <label for="email" class="form-label">Email *:</label>
-                            <input id="email" type="email" class="form-control" placeholder="Enter email" required>
+                            <input
+                                id="email"
+                                type="email"
+                                class="form-control"
+                                placeholder="Enter email"
+                                :value="selectedStudent.email || ''"
+                            >
                         </div>
                         <div class="mb-3">
                             <label for="phone_number" class="form-label">Phone Number *:</label>
-                            <input id="phone_number" type="text" class="form-control" placeholder="Enter phone number" required>
+                            <input
+                                id="phone_number"
+                                type="text"
+                                class="form-control"
+                                placeholder="Enter phone number"
+                                :value="selectedStudent.phone_number || ''"
+                            >
                         </div>
                         <div class="mb-3">
                             <label for="dob" class="form-label">Date of Birth *:</label>
-                            <input id="dob" type="text" class="form-control" placeholder="Enter date of birth" required>
+                            <input
+                                id="dob"
+                                type="text"
+                                class="form-control"
+                                placeholder="Enter date of birth"
+                                :value="selectedStudent.dob || ''"
+                            >
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Sports</label>
                             <div class="sports-list">
                                 <div v-for="sport in sports" :key="sport.id" class="form-check">
-                                    <input :id="`sport_${sport.id}`" type="checkbox" class="form-check-input" :value="sport.id">
+                                    <input
+                                        :id="`sport_${sport.id}`"
+                                        type="checkbox"
+                                        class="form-check-input"
+                                        :value="sport.id"
+                                        :checked="selectedStudent && selectedStudent.sportsIds && selectedStudent.sportsIds.includes(sport.id)"
+                                    >
                                     <label class="form-check-label" :for="`sport_${sport.id}`">{{ sport.name }}</label>
                                 </div>
                             </div>
@@ -47,7 +83,7 @@
 
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" @click="hideModal">Save</button>
+                    <button type="button" class="btn btn-primary" @click="saveData(selectedStudent.id || 0)">Save</button>
                     <button type="button" class="btn btn-danger" @click="hideModal">Close</button>
                 </div>
 
@@ -66,6 +102,10 @@ export default {
         showModal: {
             type: Boolean,
             default: false
+        },
+        selectedStudent: {
+            type: Object,
+            default: {}
         }
     },
     data(){
@@ -74,7 +114,6 @@ export default {
         }
     },
     created() {
-        console.log("Student modal created")
         this.getSports()
     },
     methods:{
@@ -100,15 +139,42 @@ export default {
                 console.log(error)
             })
         },
+        async saveData(id = 0) {
+            const url = 'http://127.0.0.1:8000/api/sports';
+console.log("id = ", id);
+            const data = {
+                first_name: document.getElementById('first_name').value,
+                last_name: document.getElementById('last_name').value,
+                email: document.getElementById('email').value,
+                dob: document.getElementById('dob').value,
+                phone_number: document.getElementById('phone_number').value,
+                sports: []
+            }
+
+            const sportsChsckboxes = document.querySelectorAll('.form-check-input:checked')
+            console.log("sportsChsckboxes = ", sportsChsckboxes);
+            sportsChsckboxes.forEach(chk => {
+                data.sports.push(+chk.value)
+            });
+            console.log("data = ", data);
+
+            /*await axios.get(url).then(response => {
+                console.log('response = ',response)
+                this.sports = response.data
+            }).catch(error => {
+                console.log(error)
+            })*/
+        },
     },
     watch: {
         showModal(newValue, oldValue) {
+            console.log("showModal");
             console.log("newValue = ",newValue);
             console.log("oldValue = ",oldValue);
             if (newValue === true) {
                 this.modalActive();
             }
-        }
+        },
     },
     mounted() {
         console.log("Student modal mounted")

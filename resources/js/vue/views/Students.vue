@@ -27,7 +27,7 @@
                             <span v-for="sport in student.student_sports" :key="sport.id" class="badge bg-primary ms-1">{{ sport.name }}</span>
                         </td>
                         <td>
-                            <button type="button" class="btn btn-warning" @click="edit">Edit</button>
+                            <button type="button" class="btn btn-warning" @click="edit(student.id)">Edit</button>
                             <button type="button" class="btn btn-danger ms-5" @click="deleteStudent">Delete</button>
                         </td>
                     </tr>
@@ -36,7 +36,7 @@
         </div>
     </div>
 
-    <StudentModal @closeModal="closeStudentModal" :showModal="showStudentModal"></StudentModal>
+    <StudentModal @closeModal="closeStudentModal" :showModal="showStudentModal" :selectedStudent="selectedStudent"></StudentModal>
     <DeleteStudentModal @closeModal="closeDeleteStudentModal" :showModal="showDeleteStudentModal"></DeleteStudentModal>
 </template>
 
@@ -53,10 +53,10 @@ export default {
     },
     data() {
         return {
-            students: Array,
-            /* this data is used for showing modal */
+            students: [],
             showStudentModal: false,
-            showDeleteStudentModal: false
+            showDeleteStudentModal: false,
+            selectedStudent: {}
         }
     },
     created() {
@@ -77,9 +77,24 @@ export default {
             this.showStudentModal = false
         },
         create() {
+            this.selectedStudent = {}
+            console.log("selectedStudent = ",this.selectedStudent)
             this.showStudentModal = true
         },
-        edit() {
+        edit(id) {
+            const student = this.students.find(element => element.id == id);
+            this.selectedStudent = {
+                id: id,
+                first_name: student.first_name,
+                last_name: student.last_name,
+                email: student.email,
+                phone_number: student.phone_number,
+                dob: student.dob,
+                sportsIds: student.student_sports.map((sport) => {
+                    return sport.id;
+                }),
+            }
+            console.log("selectedStudent = ",this.selectedStudent)
             this.showStudentModal = true
         },
         deleteStudent() {

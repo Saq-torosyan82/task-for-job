@@ -23090,6 +23090,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     showModal: {
       type: Boolean,
       "default": false
+    },
+    selectedStudent: {
+      type: Object,
+      "default": {}
     }
   },
   data: function data() {
@@ -23098,7 +23102,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     };
   },
   created: function created() {
-    console.log("Student modal created");
     this.getSports();
   },
   methods: {
@@ -23137,10 +23140,51 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }
         }, _callee);
       }))();
+    },
+    saveData: function saveData() {
+      var _arguments = arguments;
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+        var id, url, data, sportsChsckboxes;
+        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                id = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : 0;
+                url = 'http://127.0.0.1:8000/api/sports';
+                console.log("id = ", id);
+                data = {
+                  first_name: document.getElementById('first_name').value,
+                  last_name: document.getElementById('last_name').value,
+                  email: document.getElementById('email').value,
+                  dob: document.getElementById('dob').value,
+                  phone_number: document.getElementById('phone_number').value,
+                  sports: []
+                };
+                sportsChsckboxes = document.querySelectorAll('.form-check-input:checked');
+                console.log("sportsChsckboxes = ", sportsChsckboxes);
+                sportsChsckboxes.forEach(function (chk) {
+                  data.sports.push(+chk.value);
+                });
+                console.log("data = ", data);
+
+                /*await axios.get(url).then(response => {
+                    console.log('response = ',response)
+                    this.sports = response.data
+                }).catch(error => {
+                    console.log(error)
+                })*/
+              case 8:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
     }
   },
   watch: {
     showModal: function showModal(newValue, oldValue) {
+      console.log("showModal");
       console.log("newValue = ", newValue);
       console.log("oldValue = ", oldValue);
       if (newValue === true) {
@@ -23236,10 +23280,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   data: function data() {
     return {
-      students: Array,
-      /* this data is used for showing modal */
+      students: [],
       showStudentModal: false,
-      showDeleteStudentModal: false
+      showDeleteStudentModal: false,
+      selectedStudent: {}
     };
   },
   created: function created() {
@@ -23274,9 +23318,26 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.showStudentModal = false;
     },
     create: function create() {
+      this.selectedStudent = {};
+      console.log("selectedStudent = ", this.selectedStudent);
       this.showStudentModal = true;
     },
-    edit: function edit() {
+    edit: function edit(id) {
+      var student = this.students.find(function (element) {
+        return element.id == id;
+      });
+      this.selectedStudent = {
+        id: id,
+        first_name: student.first_name,
+        last_name: student.last_name,
+        email: student.email,
+        phone_number: student.phone_number,
+        dob: student.dob,
+        sportsIds: student.student_sports.map(function (sport) {
+          return sport.id;
+        })
+      };
+      console.log("selectedStudent = ", this.selectedStudent);
       this.showStudentModal = true;
     },
     deleteStudent: function deleteStudent() {
@@ -23488,21 +23549,70 @@ var _hoisted_6 = {
 var _hoisted_7 = {
   id: "studentForm"
 };
-var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"mb-3 mt-3\" data-v-19744214><label for=\"first_name\" class=\"form-label\" data-v-19744214>First Name *:</label><input id=\"first_name\" type=\"text\" class=\"form-control\" placeholder=\"Enter first name\" required data-v-19744214></div><div class=\"mb-3 mt-3\" data-v-19744214><label for=\"last_name\" class=\"form-label\" data-v-19744214>Last Name *:</label><input id=\"last_name\" type=\"text\" class=\"form-control\" placeholder=\"Enter last name\" required data-v-19744214></div><div class=\"mb-3 mt-3\" data-v-19744214><label for=\"email\" class=\"form-label\" data-v-19744214>Email *:</label><input id=\"email\" type=\"email\" class=\"form-control\" placeholder=\"Enter email\" required data-v-19744214></div><div class=\"mb-3\" data-v-19744214><label for=\"phone_number\" class=\"form-label\" data-v-19744214>Phone Number *:</label><input id=\"phone_number\" type=\"text\" class=\"form-control\" placeholder=\"Enter phone number\" required data-v-19744214></div><div class=\"mb-3\" data-v-19744214><label for=\"dob\" class=\"form-label\" data-v-19744214>Date of Birth *:</label><input id=\"dob\" type=\"text\" class=\"form-control\" placeholder=\"Enter date of birth\" required data-v-19744214></div>", 5);
-var _hoisted_13 = {
+var _hoisted_8 = {
+  "class": "mb-3 mt-3"
+};
+var _hoisted_9 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    "for": "first_name",
+    "class": "form-label"
+  }, "First Name *:", -1 /* HOISTED */);
+});
+var _hoisted_10 = ["value"];
+var _hoisted_11 = {
+  "class": "mb-3 mt-3"
+};
+var _hoisted_12 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    "for": "last_name",
+    "class": "form-label"
+  }, "Last Name *:", -1 /* HOISTED */);
+});
+var _hoisted_13 = ["value"];
+var _hoisted_14 = {
+  "class": "mb-3 mt-3"
+};
+var _hoisted_15 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    "for": "email",
+    "class": "form-label"
+  }, "Email *:", -1 /* HOISTED */);
+});
+var _hoisted_16 = ["value"];
+var _hoisted_17 = {
   "class": "mb-3"
 };
-var _hoisted_14 = /*#__PURE__*/_withScopeId(function () {
+var _hoisted_18 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    "for": "phone_number",
+    "class": "form-label"
+  }, "Phone Number *:", -1 /* HOISTED */);
+});
+var _hoisted_19 = ["value"];
+var _hoisted_20 = {
+  "class": "mb-3"
+};
+var _hoisted_21 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    "for": "dob",
+    "class": "form-label"
+  }, "Date of Birth *:", -1 /* HOISTED */);
+});
+var _hoisted_22 = ["value"];
+var _hoisted_23 = {
+  "class": "mb-3"
+};
+var _hoisted_24 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
     "class": "form-label"
   }, "Sports", -1 /* HOISTED */);
 });
-var _hoisted_15 = {
+var _hoisted_25 = {
   "class": "sports-list"
 };
-var _hoisted_16 = ["id", "value"];
-var _hoisted_17 = ["for"];
-var _hoisted_18 = {
+var _hoisted_26 = ["id", "value", "checked"];
+var _hoisted_27 = ["for"];
+var _hoisted_28 = {
   "class": "modal-footer"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
@@ -23512,7 +23622,37 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[0] || (_cache[0] = function () {
       return $options.hideModal && $options.hideModal.apply($options, arguments);
     })
-  })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Modal body "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", _hoisted_7, [_hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_13, [_hoisted_14, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_15, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.sports, function (sport) {
+  })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Modal body "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [_hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    id: "first_name",
+    type: "text",
+    "class": "form-control",
+    placeholder: "Enter first name",
+    value: $props.selectedStudent.first_name || ''
+  }, null, 8 /* PROPS */, _hoisted_10)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [_hoisted_12, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    id: "last_name",
+    type: "text",
+    "class": "form-control",
+    placeholder: "Enter last name",
+    value: $props.selectedStudent.last_name || ''
+  }, null, 8 /* PROPS */, _hoisted_13)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [_hoisted_15, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    id: "email",
+    type: "email",
+    "class": "form-control",
+    placeholder: "Enter email",
+    value: $props.selectedStudent.email || ''
+  }, null, 8 /* PROPS */, _hoisted_16)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [_hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    id: "phone_number",
+    type: "text",
+    "class": "form-control",
+    placeholder: "Enter phone number",
+    value: $props.selectedStudent.phone_number || ''
+  }, null, 8 /* PROPS */, _hoisted_19)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_20, [_hoisted_21, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    id: "dob",
+    type: "text",
+    "class": "form-control",
+    placeholder: "Enter date of birth",
+    value: $props.selectedStudent.dob || ''
+  }, null, 8 /* PROPS */, _hoisted_22)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_23, [_hoisted_24, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_25, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.sports, function (sport) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
       key: sport.id,
       "class": "form-check"
@@ -23520,16 +23660,17 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       id: "sport_".concat(sport.id),
       type: "checkbox",
       "class": "form-check-input",
-      value: sport.id
-    }, null, 8 /* PROPS */, _hoisted_16), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+      value: sport.id,
+      checked: $props.selectedStudent && $props.selectedStudent.sportsIds && $props.selectedStudent.sportsIds.includes(sport.id)
+    }, null, 8 /* PROPS */, _hoisted_26), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
       "class": "form-check-label",
       "for": "sport_".concat(sport.id)
-    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(sport.name), 9 /* TEXT, PROPS */, _hoisted_17)]);
-  }), 128 /* KEYED_FRAGMENT */))])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Modal footer "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_18, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(sport.name), 9 /* TEXT, PROPS */, _hoisted_27)]);
+  }), 128 /* KEYED_FRAGMENT */))])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Modal footer "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_28, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     type: "button",
     "class": "btn btn-primary",
-    onClick: _cache[1] || (_cache[1] = function () {
-      return $options.hideModal && $options.hideModal.apply($options, arguments);
+    onClick: _cache[1] || (_cache[1] = function ($event) {
+      return $options.saveData($props.selectedStudent.id || 0);
     })
   }, "Save"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     type: "button",
@@ -23647,6 +23788,7 @@ var _hoisted_5 = /*#__PURE__*/_withScopeId(function () {
 var _hoisted_6 = {
   "class": "sports-filed"
 };
+var _hoisted_7 = ["onClick"];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_StudentModal = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("StudentModal");
   var _component_DeleteStudentModal = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("DeleteStudentModal");
@@ -23667,20 +23809,21 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }), 128 /* KEYED_FRAGMENT */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
       type: "button",
       "class": "btn btn-warning",
-      onClick: _cache[1] || (_cache[1] = function () {
-        return $options.edit && $options.edit.apply($options, arguments);
-      })
-    }, "Edit"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      onClick: function onClick($event) {
+        return $options.edit(student.id);
+      }
+    }, "Edit", 8 /* PROPS */, _hoisted_7), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
       type: "button",
       "class": "btn btn-danger ms-5",
-      onClick: _cache[2] || (_cache[2] = function () {
+      onClick: _cache[1] || (_cache[1] = function () {
         return $options.deleteStudent && $options.deleteStudent.apply($options, arguments);
       })
     }, "Delete")])]);
   }), 128 /* KEYED_FRAGMENT */))])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_StudentModal, {
     onCloseModal: $options.closeStudentModal,
-    showModal: $data.showStudentModal
-  }, null, 8 /* PROPS */, ["onCloseModal", "showModal"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_DeleteStudentModal, {
+    showModal: $data.showStudentModal,
+    selectedStudent: $data.selectedStudent
+  }, null, 8 /* PROPS */, ["onCloseModal", "showModal", "selectedStudent"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_DeleteStudentModal, {
     onCloseModal: _ctx.closeDeleteStudentModal,
     showModal: $data.showDeleteStudentModal
   }, null, 8 /* PROPS */, ["onCloseModal", "showModal"])], 64 /* STABLE_FRAGMENT */);
