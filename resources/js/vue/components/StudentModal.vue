@@ -11,8 +11,9 @@
                 </div>
 
                 <!-- Modal body -->
+                <form :onSubmit="saveData">
                 <div class="modal-body">
-                    <form id="studentForm">
+                    
                         <div class="mb-3 mt-3">
                             <label for="first_name" class="form-label">First Name *:</label>
                             <input
@@ -67,26 +68,28 @@
                             <label class="form-label">Sports</label>
                             <div class="sports-list">
                                 <div v-for="sport in sports" :key="sport.id" class="form-check">
+                                    <label class="form-check-label">
                                     <input
                                         :id="`sport_${sport.id}`"
                                         type="checkbox"
+                                        v-model="selectedSports"
                                         class="form-check-input"
                                         :value="sport.id"
                                         :checked="selectedStudent && selectedStudent.sportsIds && selectedStudent.sportsIds.includes(sport.id)"
                                     >
-                                    <label class="form-check-label" :for="`sport_${sport.id}`">{{ sport.name }}</label>
+                                    {{ sport.name }}</label>
                                 </div>
                             </div>
                         </div>
-                    </form>
+                    
                 </div>
 
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" @click="saveData(selectedStudent.id || 0)">Save</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
                     <button type="button" class="btn btn-danger" @click="hideModal">Close</button>
                 </div>
-
+            </form>
             </div>
         </div>
     </div>
@@ -111,6 +114,7 @@ export default {
     data(){
         return {
             sports: Array,
+            selectedSports: []
         }
     },
     created() {
@@ -139,23 +143,21 @@ export default {
                 console.log(error)
             })
         },
-        async saveData(id = 0) {
+        async saveData(event) {
+            event.preventDefault();
             const url = 'http://127.0.0.1:8000/api/sports';
+            let id = this.selectedStudent.id || 0;
 console.log("id = ", id);
+console.log("selectedSports = ", this.selectedSports);
             const data = {
                 first_name: document.getElementById('first_name').value,
                 last_name: document.getElementById('last_name').value,
                 email: document.getElementById('email').value,
                 dob: document.getElementById('dob').value,
                 phone_number: document.getElementById('phone_number').value,
-                sports: []
+                sports: this.selectedSports
             }
 
-            const sportsChsckboxes = document.querySelectorAll('.form-check-input:checked')
-            console.log("sportsChsckboxes = ", sportsChsckboxes);
-            sportsChsckboxes.forEach(chk => {
-                data.sports.push(+chk.value)
-            });
             console.log("data = ", data);
 
             /*await axios.get(url).then(response => {
